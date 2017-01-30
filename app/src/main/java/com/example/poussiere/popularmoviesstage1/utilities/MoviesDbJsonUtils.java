@@ -29,7 +29,7 @@ public class MoviesDbJsonUtils {
 
 
 
-    //Get a tab with all the poster paths from the JSONfile result
+    //Get a tab with all the poster paths from the JSONfile result to display posters in a GridLayout
     public static String [] getPostersFullUrl(String jsonString) throws JSONException
 
     {
@@ -62,6 +62,8 @@ public class MoviesDbJsonUtils {
 
     }
 
+
+    /*
     //Get a tab with all the movie Id from the JSONfile result
     public static int [] getMovieId(String jsonString) throws JSONException
     {
@@ -90,8 +92,43 @@ public class MoviesDbJsonUtils {
 
     }
 
+*/
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Methods for the detail activity
+
+    public static String getTitleFromJson (int index)
+    {
+
+
+    }
+
+    public static String getPosterFullUrl(int index)
+    {
+
+    }
+
+    public static String getOverview(int index)
+    {
+
+    }
+
+    public static float getNoteAverage(int index)
+    {
+
+    }
+
+    public static String getReleaseDate(int index)
+    {
+
+    }
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
     //Method that allow to handle possible error messages in the Json Files from the movie db
     public static boolean hasErrorMessage(JSONObject jsonObject) throws JSONException
     {

@@ -141,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
+        // Au lieu de retourner un tableau de string, la méthode retournera tout simplement le fichier Json complet. Ce sera lui qui sera passé en extra également.
+
         @Override
         protected String[] doInBackground(Integer... params) {
 

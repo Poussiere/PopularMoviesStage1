@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.poussiere.popularmoviesstage1.DetailActivity">
+
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rt_note_average"
+        android:layout_alignTop="@+id/tv_release_date"
+        android:layout_toRightOf="@+id/tv_release_date"
+        android:layout_toEndOf="@+id/tv_release_date" />
+
+    <ImageView
+        android:layout_width="173dp"
+        android:layout_height="232dp"
+        app:srcCompat="@android:drawable/sym_def_app_icon"
+        android:id="@+id/imageView"
+        android:layout_above="@id/rt_note_average"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/tv_release_date"
+        android:layout_marginLeft="37dp"
+        android:layout_marginStart="37dp"
+        android:layout_marginBottom="241dp"
+        android:layout_alignParentBottom="true"
+      />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_overview"
+        android:gravity="center"
+        android:text="chose"
+        android:layout_below="@+id/rt_note_average"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>
