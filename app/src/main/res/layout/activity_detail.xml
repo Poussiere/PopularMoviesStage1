@@ -20,7 +20,7 @@
         android:layout_width="173dp"
         android:layout_height="232dp"
         app:srcCompat="@android:drawable/sym_def_app_icon"
-        android:id="@+id/imageView"
+        android:id="@+id/iv_detailPoster"
         android:layout_above="@id/rt_note_average"
         android:layout_centerHorizontal="true" />
 

@@ -19,6 +19,11 @@ public class MoviesDbJsonUtils {
 
     final static String TMDB_MOVIES_ARRAY="results";
     final static String TMDB_POSTER_PATH="poster_path";
+    final static String TMDB_ORIGINAL_TITLE="original_title";
+    final static String TMDB_OVERVIEW="overview";
+    final static String TMDB_VOTE_AVERAGE="vote_average";
+    final static String TMDB_RELEASE_DATE="release_date";
+
 
     //number of results for each page of results
     final static int RESULTS_NUMBER=20;
@@ -34,7 +39,7 @@ public class MoviesDbJsonUtils {
 
     {
 
-       String [] postersUrl=new String [RESULTS_NUMBER];
+
         JSONObject jsonObject = new JSONObject(jsonString);
 
         //handle possible error messages
@@ -43,13 +48,13 @@ public class MoviesDbJsonUtils {
 
 
         JSONObject tabRow;
-
+        String [] postersUrl=new String [RESULTS_NUMBER];
         for (int i=0; i<postersUrl.length; i++)
         {
             //We get each row of the JsonArray
             tabRow=jsonMoviesArray.getJSONObject(i);
 
-            //We convert each row of the JsonArray to String and pass it as argument to the method that construts the full url of posters
+            //We convert each row of the JsonArray to String and pass it as argument to the method that construtcs the full url of posters
             postersUrl[i]=NetworkUtils.buidUrlPoster(tabRow.getString(TMDB_POSTER_PATH));
 
         }
@@ -98,29 +103,70 @@ public class MoviesDbJsonUtils {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Methods for the detail activity
 
-    public static String getTitleFromJson (int index)
+
+    public static String getOriginalTitleFromJson (String jsonString, int index) throws JSONException
     {
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return null;
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
+        JSONObject object =jsonMoviesArray.getJSONObject(index);
+        String originalTitle=object.getString(TMDB_ORIGINAL_TITLE);
+        return originalTitle;
+
+    }
+
+    public static String getPosterFullUrl (String jsonString, int index) throws JSONException
+    {
+         JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return null;
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
+        JSONObject object =jsonMoviesArray.getJSONObject(index);
+        String posterFullUr=NetworkUtils.buidUrlPoster(object.getString(TMDB_POSTER_PATH));
+        return posterFullUr;
 
 
     }
 
-    public static String getPosterFullUrl(int index)
+    public static String getOverview (String jsonString, int index) throws JSONException
     {
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return null;
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
+        JSONObject object =jsonMoviesArray.getJSONObject(index);
+        String overview=object.getString(TMDB_OVERVIEW);
+        return overview;
 
     }
 
-    public static String getOverview(int index)
+    public static double getNoteAverage (String jsonString, int index) throws JSONException
     {
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return 0;
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
+        JSONObject object =jsonMoviesArray.getJSONObject(index);
+        double noteAverage=(double)object.getDouble(TMDB_VOTE_AVERAGE);
+        return noteAverage;
 
     }
 
-    public static float getNoteAverage(int index)
+    public static String getReleaseDate (String jsonString, int index) throws JSONException
     {
+        JSONObject jsonObject = new JSONObject(jsonString);
 
-    }
-
-    public static String getReleaseDate(int index)
-    {
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return null;
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
+        JSONObject object =jsonMoviesArray.getJSONObject(index);
+        String releaseDate=object.getString(TMDB_RELEASE_DATE);
+        return releaseDate;
 
     }
 

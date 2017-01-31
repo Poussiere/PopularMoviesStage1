@@ -29,6 +29,7 @@ Penser tout de même à demander les bonnes permissions dans le manifest
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -52,13 +53,18 @@ import android.widget.SpinnerAdapter;
 import com.example.poussiere.popularmoviesstage1.utilities.MoviesDbJsonUtils;
 import com.example.poussiere.popularmoviesstage1.utilities.NetworkUtils;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesPostersAdapter.MoviesPostersAdapterOnClickHandler{
 
-    private static int SORT_BY_POPULARITY = 0;
-    private static int SORT_BY_TOP_RATED = 1;
+    private final static int SORT_BY_POPULARITY = 0;
+    private final static int SORT_BY_TOP_RATED = 1;
+
+    public final static String INDEX = "index";
+    public final static String JSON_STRING="json";
 
     private int sortChoice = SORT_BY_POPULARITY ;// By default movie posters are sort by popularity
 
@@ -70,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     //array for the spinner (choice between popular vs top rated
     private String [] sortBy = null;
     private Spinner spinner;
+    private String jsonStringResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         GridLayoutManager  gridLayoutManager = new GridLayoutManager(MainActivity.this, 3); // 3 = number of items on each row
         postersRecyclerView.setLayoutManager(gridLayoutManager);
 
-        moviesPostersAdapter=new MoviesPostersAdapter();
+        moviesPostersAdapter=new MoviesPostersAdapter(this);
         postersRecyclerView.setAdapter(moviesPostersAdapter);
 
 
@@ -130,8 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-    public class FetchMoviesTask extends AsyncTask<Integer, Void, String[]>
+    public class FetchMoviesTask extends AsyncTask<Integer, Void, String>
     {
 
         @Override
@@ -145,11 +151,13 @@ public class MainActivity extends AppCompatActivity {
         // Au lieu de retourner un tableau de string, la méthode retournera tout simplement le fichier Json complet. Ce sera lui qui sera passé en extra également.
 
         @Override
-        protected String[] doInBackground(Integer... params) {
+        protected String doInBackground(Integer... params) {
 
 
             URL movieListRequest = null;
-            String[] postersFullUrl=null;
+
+            String jsonMovieResponse=null;
+
 
             if (sortChoice == SORT_BY_POPULARITY) {
                 movieListRequest = NetworkUtils.buildUrlSortByPopularity();}
@@ -157,8 +165,8 @@ public class MainActivity extends AppCompatActivity {
                 {movieListRequest = NetworkUtils.buildUrlSortByTopRated();}
 
                 try {
-                    String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieListRequest);
-                   postersFullUrl = MoviesDbJsonUtils.getPostersFullUrl(jsonMovieResponse);
+                    jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieListRequest);
+
 
 
 
@@ -169,22 +177,43 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-            return postersFullUrl;
+            return jsonMovieResponse;
         }
 
         @Override
-        protected void onPostExecute(String [] moviesUrl)
+        protected void onPostExecute(String jsonString)
         {
 
+            jsonStringResult=jsonString;
 
-            if (moviesUrl!=null)
+            String[] postersFullUrl=null;
+
+            if (jsonString!=null)
             {
-                moviesPostersAdapter.setMoviesPostersUrl(moviesUrl);
+
+                try {
+                    postersFullUrl = MoviesDbJsonUtils.getPostersFullUrl(jsonString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                moviesPostersAdapter.setMoviesPostersUrl(postersFullUrl);
             }
 
         }
     }
 
+
+
+    @Override
+    public void whatMovieIndex(int index) {
+        Intent i = new Intent (MainActivity.this, DetailActivity.class);
+        i.putExtra(INDEX, index);
+        i.putExtra(JSON_STRING,jsonStringResult );
+        startActivity(i);
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

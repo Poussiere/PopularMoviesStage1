@@ -18,13 +18,20 @@ import com.squareup.picasso.Picasso;
 public class MoviesPostersAdapter extends RecyclerView.Adapter< MoviesPostersAdapter.MoviesPostersViewHolder> {
 
     private String [] posterList;
+    private final MoviesPostersAdapterOnClickHandler mClickHandler;
 
+
+
+    public interface MoviesPostersAdapterOnClickHandler {
+
+        void whatMovieIndex(int index);
+    }
 
 
     //Constructor
-    public MoviesPostersAdapter ()
+    public MoviesPostersAdapter (MoviesPostersAdapterOnClickHandler mp)
     {
-
+    mClickHandler=mp;
     }
 
 
@@ -70,7 +77,7 @@ public class MoviesPostersAdapter extends RecyclerView.Adapter< MoviesPostersAda
 
 
 
-    public class MoviesPostersViewHolder extends RecyclerView.ViewHolder
+    public class MoviesPostersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
 
 
@@ -81,6 +88,15 @@ public class MoviesPostersAdapter extends RecyclerView.Adapter< MoviesPostersAda
             super(itemView);
             posterView = (ImageView)itemView.findViewById(R.id.poster_view);
             progressBar=(ProgressBar)itemView.findViewById(R.id.progress_bar_cardview);
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            int adapterPosition=getAdapterPosition();
+            mClickHandler.whatMovieIndex(adapterPosition);
 
         }
     }
