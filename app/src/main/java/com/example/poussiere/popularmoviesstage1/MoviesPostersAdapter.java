@@ -7,13 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
-/**
- * Created by poussiere on 24/01/17.
- */
 
 public class MoviesPostersAdapter extends RecyclerView.Adapter< MoviesPostersAdapter.MoviesPostersViewHolder> {
 

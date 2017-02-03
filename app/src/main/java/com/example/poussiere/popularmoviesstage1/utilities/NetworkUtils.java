@@ -1,10 +1,6 @@
 package com.example.poussiere.popularmoviesstage1.utilities;
 
 import android.net.Uri;
-import android.util.Log;
-
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -12,10 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-/**
- Cette classe va être utiliser pour construire les url, faire les requêtes et récupérer les résultats
- Il y aura au moins 3 méthodes : construire l'Url pour la demande de la liste de films triée par popularité, une autre par note? puis plusieurs autres pour récupérer des informations à prtir du nom d'un film.
- */
+
 
 public class NetworkUtils {
 
@@ -24,12 +17,10 @@ public class NetworkUtils {
 
     private static final String BASE_URL_POPULAR_REQUEST="https://api.themoviedb.org/3/movie/popular";
     private static final String BASE_URL_TOP_RATED_REQUEST="https://api.themoviedb.org/3/movie/top_rated";
-
     private static final String BASE_URL_POSTER_REQUEST="http://image.tmdb.org/t/p/";
     private static final String SMALL_POSTER_SIZE="/w342/";
     private static final String BIG_POSTER_SIZE="/w500/";
 
-   // private static final String BASE_URL_IMAGE_PATH_REQUEST="https://api.themoviedb.org/3/movie/";
 
 
 
@@ -116,51 +107,3 @@ public class NetworkUtils {
 }
 
 
-  /*  //We need the poster path in order to construct the url of each movie poster
-    //Retrieve the movie id in the main from the Json array of movies
-    public static String getPosterPath(int movieId)
-
-    {
-        String jsonPath=null;
-        String posterPath=null;
-
-        //  we need to know the path of the image.
-        Uri pathUri=Uri.parse(BASE_URL_IMAGE_PATH_REQUEST+movieId+"images").buildUpon()
-                .appendQueryParameter(KEY_PARAM, apiKey).build();
-        URL requestPathUrl=null;
-
-        try {
-            requestPathUrl=new URL(pathUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        // We get the json result by requesting with getResponseFromHttUrl method
-        try {
-            jsonPath = getResponseFromHttpUrl(requestPathUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //We get the path in String with the method of MoviesDbJsonUtils getPosterPathFromJson
-        try {
-           posterPath = MoviesDbJsonUtils.getPosterPathFromJson(jsonPath);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return posterPath;
-    }
-
-    //This method returns the url of the poster image. The result will be passed in Picassa
-
-
-  /*  public static URL buildUrlPoster(int movieId)
-    {
-
-
-
-
-    }
-
-*/

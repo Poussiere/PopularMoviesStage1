@@ -1,61 +1,24 @@
 package com.example.poussiere.popularmoviesstage1;
 
-/*
 
-
-Clé de l'API (v3 auth)
-
-ac25d2d29180abf9b84a87eba3ad5316
-Jeton d'accès en lecture à l'API (v4 auth)
-
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYzI1ZDJkMjkxODBhYmY5Yjg0YTg3ZWJhM2FkNTMxNiIsInN1YiI6IjU4ODY3NzUwOTI1MTQxMTI1ZTAwMzk3MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.51-VfG3E26SZgGdeyqAPhSTLQRfG_zmbq5avUYLsy3I
-Exemple de requête API
-
-https://api.themoviedb.org/3/movie/550?api_key=ac25d2d29180abf9b84a87eba3ad5316
-
-
-//Principe générale
-Les posters seront affichés grace à une recyclerview de card view. et gridview layout.
-Dans le main, on crée un asynctask qui va envoyer la requête auprès de la moviedatabase et récupérer un tableau de string representant chaque lien vers une image.
-Ce tableau de string est passé en parametre de l'adapter du recyclerview. Chaque card view chargera un lien de ce tableau grace à picassa.
-
-Fastoche!!
-
-Penser tout de même à demander les bonnes permissions dans le manifest
-
-
- */
-
-
-
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-
 import com.example.poussiere.popularmoviesstage1.utilities.MoviesDbJsonUtils;
 import com.example.poussiere.popularmoviesstage1.utilities.NetworkUtils;
-
 import org.json.JSONException;
-
-import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements MoviesPostersAdapter.MoviesPostersAdapterOnClickHandler{
@@ -88,12 +51,12 @@ public class MainActivity extends AppCompatActivity implements MoviesPostersAdap
         sortBy = getResources().getStringArray(R.array.sort_by);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-       //getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         // Make title white
        toolbar.setTitleTextColor(Color.WHITE);
 
         SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.sort_by, R.layout.spinner_items);
-       // Spinner navigationSpinner = new Spinner(getSupportActionBar().getThemedContext());
+
 
 
         spinner.setAdapter(spinnerAdapter);
@@ -147,9 +110,6 @@ public class MainActivity extends AppCompatActivity implements MoviesPostersAdap
 
 
         }
-
-
-        // Au lieu de retourner un tableau de string, la méthode retournera tout simplement le fichier Json complet. Ce sera lui qui sera passé en extra également.
 
         @Override
         protected String doInBackground(Integer... params) {

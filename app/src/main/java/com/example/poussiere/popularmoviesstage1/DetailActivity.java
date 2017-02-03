@@ -5,13 +5,10 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-import com.example.poussiere.popularmoviesstage1.R;
 import com.example.poussiere.popularmoviesstage1.utilities.MoviesDbJsonUtils;
 import com.squareup.picasso.Picasso;
 
@@ -24,19 +21,18 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvTitle;
     private TextView tvReleaseDate;
     private TextView tvOverview;
-    private RatingBar rtNoteAverage;
-
+    private TextView tvRate;
+    private RatingBar rtRate;
     private String originalTitle;
     private String posterFullUrl;
     private String releaseDate;
     private String overview;
     private float noteAverage;
-
     private String jsonString;
     private Toolbar toolbar;
     private int index;
 
-    //we'll set the movie title in the toolbar
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +52,8 @@ public class DetailActivity extends AppCompatActivity {
         tvTitle=(TextView) findViewById(R.id.tv_title);
         tvReleaseDate = (TextView) findViewById(R.id.tv_release_date);
         tvOverview = (TextView) findViewById(R.id.tv_overview);
-        rtNoteAverage = (RatingBar) findViewById(R.id.rt_note_average);
+        tvRate=(TextView)findViewById((R.id.tv_note));
+        rtRate = (RatingBar) findViewById(R.id.rt_note_average);
 
 
     }
@@ -75,6 +72,8 @@ protected void onResume()
         releaseDate = MoviesDbJsonUtils.getReleaseDate(jsonString, index);
         overview = MoviesDbJsonUtils.getOverview(jsonString, index);
         noteAverage = (float) MoviesDbJsonUtils.getNoteAverage(jsonString, index);
+        noteAverage = noteAverage/2; //we want only 5 stars max but by default the rate is /10
+
     }
 
 
@@ -85,7 +84,8 @@ protected void onResume()
     tvTitle.setText(originalTitle);
     tvReleaseDate.setText(releaseDate);
     tvOverview.setText(overview);
-    rtNoteAverage.setRating((float) (noteAverage/2.0));
+    tvRate.setText(noteAverage+"/5");
+    rtRate.setRating(noteAverage);
 
 
 }

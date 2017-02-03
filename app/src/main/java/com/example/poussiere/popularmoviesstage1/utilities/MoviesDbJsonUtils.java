@@ -4,18 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
-
- */
 
 public class MoviesDbJsonUtils {
 
 
 
-   /* // Key for the request of each poster path
-    final static String TMDB_POSTERS_ARRAY="posters";
-    final static String TMDB_POSTER_PATH="file_path";
-*/
+   // Keys for the SonFile returned by TMDB
 
     final static String TMDB_MOVIES_ARRAY="results";
     final static String TMDB_POSTER_PATH="poster_path";
@@ -68,38 +62,6 @@ public class MoviesDbJsonUtils {
     }
 
 
-    /*
-    //Get a tab with all the movie Id from the JSONfile result
-    public static int [] getMovieId(String jsonString) throws JSONException
-    {
-        int [] movieId=new int [RESULTS_NUMBER];
-        JSONObject jsonObject = new JSONObject(jsonString);
-
-        //handle possible error messages
-        if (hasErrorMessage(jsonObject)) return null;
-        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
-
-
-        JSONObject tabRow;
-
-        for (int i=0; i<movieId.length; i++)
-        {
-            tabRow=jsonMoviesArray.getJSONObject(i);
-            movieId[i]=tabRow.getInt(TMDB_POSTER_PATH);
-
-        }
-
-
-        return movieId;
-
-        //
-
-
-    }
-
-*/
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Methods for the detail activity
 
@@ -117,19 +79,6 @@ public class MoviesDbJsonUtils {
 
     }
 
-    public static String getSmallPosterFullUrl (String jsonString, int index) throws JSONException
-    {
-         JSONObject jsonObject = new JSONObject(jsonString);
-
-        //handle possible error messages
-        if (hasErrorMessage(jsonObject)) return null;
-        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
-        JSONObject object =jsonMoviesArray.getJSONObject(index);
-        String posterFullUr=NetworkUtils.buidUrlSmallPoster(object.getString(TMDB_POSTER_PATH));
-        return posterFullUr;
-
-
-    }
 
     public static String getBigPosterFullUrl (String jsonString, int index) throws JSONException
     {
@@ -190,7 +139,7 @@ public class MoviesDbJsonUtils {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Method that allow to handle possible error messages in the Json Files from the movie db
+    //Method that allows to handle possible error messages in the Json Files from the movie db
     public static boolean hasErrorMessage(JSONObject jsonObject) throws JSONException
     {
 
@@ -214,43 +163,5 @@ public class MoviesDbJsonUtils {
     }
 
 
-/*
-// creer une fonction pour récupérer le chemin d'un poster à partir d'un string Json
-
-    public static String getPosterPathFromJson (String jsonString) throws JSONException
-    {
-        JSONObject posterPathJsonObject = new JSONObject(jsonString);
-
-
-        //Handle possible error messages
-
-        if (posterPathJsonObject.has(TMDB_ERROR))
-        {
-            int errorCode = posterPathJsonObject.getInt(TMDB_ERROR);
-
-            switch (errorCode) {
-
-                case 7:
-                    return null;
-                //invalid api key
-                case 34:
-                    return null;
-                //requested resource not found
-            }
-
-        }
-
-
-        //
-
-        JSONArray postersArray = posterPathJsonObject.getJSONArray(TMDB_POSTERS_ARRAY);
-        JSONObject first = postersArray.getJSONObject(0); //
-        String result=first.getString(TMDB_POSTER_PATH);
-
-        return result;
-
-
-    }
-*/
 
 }
