@@ -55,7 +55,7 @@ public class MoviesDbJsonUtils {
             tabRow=jsonMoviesArray.getJSONObject(i);
 
             //We convert each row of the JsonArray to String and pass it as argument to the method that construtcs the full url of posters
-            postersUrl[i]=NetworkUtils.buidUrlPoster(tabRow.getString(TMDB_POSTER_PATH));
+            postersUrl[i]=NetworkUtils.buidUrlSmallPoster(tabRow.getString(TMDB_POSTER_PATH));
 
         }
 
@@ -117,7 +117,7 @@ public class MoviesDbJsonUtils {
 
     }
 
-    public static String getPosterFullUrl (String jsonString, int index) throws JSONException
+    public static String getSmallPosterFullUrl (String jsonString, int index) throws JSONException
     {
          JSONObject jsonObject = new JSONObject(jsonString);
 
@@ -125,11 +125,26 @@ public class MoviesDbJsonUtils {
         if (hasErrorMessage(jsonObject)) return null;
         JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
         JSONObject object =jsonMoviesArray.getJSONObject(index);
-        String posterFullUr=NetworkUtils.buidUrlPoster(object.getString(TMDB_POSTER_PATH));
+        String posterFullUr=NetworkUtils.buidUrlSmallPoster(object.getString(TMDB_POSTER_PATH));
         return posterFullUr;
 
 
     }
+
+    public static String getBigPosterFullUrl (String jsonString, int index) throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return null;
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
+        JSONObject object =jsonMoviesArray.getJSONObject(index);
+        String posterFullUr=NetworkUtils.buidUrlBigPoster(object.getString(TMDB_POSTER_PATH));
+        return posterFullUr;
+
+
+    }
+
 
     public static String getOverview (String jsonString, int index) throws JSONException
     {

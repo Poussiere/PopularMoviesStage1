@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Best Movies!</string>
+    <string name="detail_activity_name">Details</string>
 
     <string-array name="sort_by">
         <item>Most popular</item>

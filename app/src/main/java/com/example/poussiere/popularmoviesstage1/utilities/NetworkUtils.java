@@ -26,8 +26,8 @@ public class NetworkUtils {
     private static final String BASE_URL_TOP_RATED_REQUEST="https://api.themoviedb.org/3/movie/top_rated";
 
     private static final String BASE_URL_POSTER_REQUEST="http://image.tmdb.org/t/p/";
-    private static final String POSTER_SIZE="/w185/";
-
+    private static final String SMALL_POSTER_SIZE="/w342/";
+    private static final String BIG_POSTER_SIZE="/w500/";
 
    // private static final String BASE_URL_IMAGE_PATH_REQUEST="https://api.themoviedb.org/3/movie/";
 
@@ -75,15 +75,22 @@ public class NetworkUtils {
 
     //Method that returns the url of the poster to display in GridLayout
     //We return a String because the url will be used with Picassa
-    public static String buidUrlPoster(String posterPath)
+    public static String buidUrlSmallPoster(String posterPath)
     {
 
-        String stringUrl=BASE_URL_POSTER_REQUEST+POSTER_SIZE+posterPath;
-        Log.i("Interstellar", stringUrl);
+        String stringUrl=BASE_URL_POSTER_REQUEST+SMALL_POSTER_SIZE+posterPath;
+
         return stringUrl;
     }
 
+    //Method that returns the url of the poster to display in DetailActivity
+    //We return a String because the url will be used with Picassa
+    public static String buidUrlBigPoster(String posterPath)
+    {
 
+        String stringUrl=BASE_URL_POSTER_REQUEST+BIG_POSTER_SIZE+posterPath;
+        return stringUrl;
+    }
 
     //Method that return the result of the http request
 

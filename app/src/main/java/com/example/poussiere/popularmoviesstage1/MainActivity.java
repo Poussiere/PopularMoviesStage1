@@ -89,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements MoviesPostersAdap
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
        //getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setTitleTextColor(Color.WHITE);
+        // Make title white
+       toolbar.setTitleTextColor(Color.WHITE);
 
         SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.sort_by, R.layout.spinner_items);
        // Spinner navigationSpinner = new Spinner(getSupportActionBar().getThemedContext());
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements MoviesPostersAdap
 
 
         postersRecyclerView.setHasFixedSize(true);
-        GridLayoutManager  gridLayoutManager = new GridLayoutManager(MainActivity.this, 3); // 3 = number of items on each row
+        GridLayoutManager  gridLayoutManager = new GridLayoutManager(MainActivity.this, 2); // 3 = number of items on each row
         postersRecyclerView.setLayoutManager(gridLayoutManager);
 
         moviesPostersAdapter=new MoviesPostersAdapter(this);
