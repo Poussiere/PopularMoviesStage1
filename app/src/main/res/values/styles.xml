@@ -11,7 +11,7 @@
    </style>
 
 
-    <style name="MyApp.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="MyApp.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
         <item name="android:textColorPrimary">@color/white</item>
 
