@@ -17,6 +17,7 @@ public class MoviesDbJsonUtils {
     final static String TMDB_OVERVIEW="overview";
     final static String TMDB_VOTE_AVERAGE="vote_average";
     final static String TMDB_RELEASE_DATE="release_date";
+    final static String TMDB_MOVIE_ID="id";
 
 
     //number of results for each page of results
@@ -25,6 +26,7 @@ public class MoviesDbJsonUtils {
 
     //Key to handle error messages from the movie db Json
     final static String TMDB_ERROR="status_code";
+
 
 
 
@@ -65,6 +67,23 @@ public class MoviesDbJsonUtils {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Methods for the detail activity
 
+
+    //Get the ID of the selected movie
+    //The id is necessary to request video and reviews
+
+    public static int getMovieIdFromJson (String jsonString, int index) throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return 0;
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_MOVIES_ARRAY);
+        JSONObject object =jsonMoviesArray.getJSONObject(index);
+
+        int movieId=object.getInt(TMDB_MOVIE_ID);
+        return movieId;
+
+    }
 
     public static String getOriginalTitleFromJson (String jsonString, int index) throws JSONException
     {

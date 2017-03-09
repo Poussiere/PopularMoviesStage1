@@ -4,11 +4,15 @@ package com.example.poussiere.popularmoviesstage1;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -19,9 +23,13 @@ import android.widget.SpinnerAdapter;
 import com.example.poussiere.popularmoviesstage1.utilities.MoviesDbJsonUtils;
 import com.example.poussiere.popularmoviesstage1.utilities.NetworkUtils;
 import org.json.JSONException;
+
+import java.io.IOException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity implements MoviesPostersAdapter.MoviesPostersAdapterOnClickHandler{
+public class MainActivity extends AppCompatActivity implements MoviesPostersAdapter.MoviesPostersAdapterOnClickHandler, LoaderManager.LoaderCallbacks<String>{
+
+    private static final int ASYNC_LOADER_ID = 42;
 
     private final static int SORT_BY_POPULARITY = 0;
     private final static int SORT_BY_TOP_RATED = 1;
@@ -40,6 +48,15 @@ public class MainActivity extends AppCompatActivity implements MoviesPostersAdap
     private String [] sortBy = null;
     private Spinner spinner;
     private String jsonStringResult;
+
+    // Key for intent extras that will be passed to detail activity
+    public static final String MOVIE_ID="movie_id";
+    public static final String ORIGINAL_TITLE="original_title";
+    public static final String POSTER_FULL_URL="poster_full_url";
+    public static final String RELEASE_DATE="release_date";
+    public static final String OVERVIEW="overview";
+    public static final String NOTE_AVERAGE="note_average";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,40 +106,61 @@ public class MainActivity extends AppCompatActivity implements MoviesPostersAdap
         postersRecyclerView.setAdapter(moviesPostersAdapter);
 
 
-        loadMoviesData();
+        getSupportLoaderManager().initLoader(ASYNC_LOADER_ID, null, this);
     }
 
 
     private void loadMoviesData()
     {
-        new FetchMoviesTask().execute();
+
+
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String> movieQuerryLoader = loaderManager.getLoader(ASYNC_LOADER_ID);
+        if (movieQuerryLoader == null) {
+            loaderManager.initLoader(ASYNC_LOADER_ID, null, this);
+        } else {
+            loaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
+        }
 
     }
 
 
 
-    public class FetchMoviesTask extends AsyncTask<Integer, Void, String>
-    {
+    @Override
+    public Loader<String> onCreateLoader(int id, final Bundle args) {
+        return new AsyncTaskLoader<String>(this) {
 
-        @Override
-        protected void onPreExecute()
-        {
+            // COMPLETED (1) Create a String member variable called mGithubJson that will store the raw JSON
+            /* This String will contain the raw JSON from the results of our Github search */
+            String jsonResult;
+
+            @Override
+            protected void onStartLoading() {
+
+                /* If no arguments were passed, we don't have a query to perform. Simply return.
+                if (args == null) {
+                    return;
+                }
+                */
+
+                if (jsonResult != null) {
+                    deliverResult(jsonResult);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            @Override
+            public String loadInBackground() {
+
+                URL movieListRequest = null;
+
+                String jsonMovieResponse=null;
 
 
-        }
-
-        @Override
-        protected String doInBackground(Integer... params) {
-
-
-            URL movieListRequest = null;
-
-            String jsonMovieResponse=null;
-
-
-            if (sortChoice == SORT_BY_POPULARITY) {
-                movieListRequest = NetworkUtils.buildUrlSortByPopularity();}
-            else
+                if (sortChoice == SORT_BY_POPULARITY) {
+                    movieListRequest = NetworkUtils.buildUrlSortByPopularity();}
+                else
                 {movieListRequest = NetworkUtils.buildUrlSortByTopRated();}
 
                 try {
@@ -138,43 +176,76 @@ public class MainActivity extends AppCompatActivity implements MoviesPostersAdap
                 }
 
 
-            return jsonMovieResponse;
-        }
-
-        @Override
-        protected void onPostExecute(String jsonString)
-        {
-
-            jsonStringResult=jsonString;
-
-            String[] postersFullUrl=null;
-
-            if (jsonString!=null)
-            {
-
-                try {
-                    postersFullUrl = MoviesDbJsonUtils.getPostersFullUrl(jsonString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                moviesPostersAdapter.setMoviesPostersUrl(postersFullUrl);
+                return jsonMovieResponse;
             }
 
+
+            @Override
+            public void deliverResult(String jsonMovieResponse) {
+                jsonResult = jsonMovieResponse;
+                super.deliverResult(jsonResult);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String jsonString) {
+
+        jsonStringResult=jsonString;
+
+        String[] postersFullUrl=null;
+
+        if (jsonString!=null)
+        {
+
+            try {
+                postersFullUrl = MoviesDbJsonUtils.getPostersFullUrl(jsonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            moviesPostersAdapter.setMoviesPostersUrl(postersFullUrl);
         }
     }
 
+    @Override
+    public void onLoaderReset(Loader<String> loader) {
+        /*
+         * We aren't using this method in our example application, but we are required to Override
+         * it to implement the LoaderCallbacks<String> interface
+         */
+    }
 
 
+    //This method is trigered when an item is clicked
     @Override
     public void whatMovieIndex(int index) {
         Intent i = new Intent (MainActivity.this, DetailActivity.class);
-        i.putExtra(INDEX, index);
-        i.putExtra(JSON_STRING,jsonStringResult );
+        try {
+            int movieId=MoviesDbJsonUtils.getMovieIdFromJson(jsonStringResult, index);
+           String originalTitle = MoviesDbJsonUtils.getOriginalTitleFromJson(jsonStringResult, index);
+           String posterFullUrl = MoviesDbJsonUtils.getBigPosterFullUrl(jsonStringResult, index);
+           String releaseDate = MoviesDbJsonUtils.getReleaseDate(jsonStringResult, index);
+            String  overview = MoviesDbJsonUtils.getOverview(jsonStringResult, index);
+           float noteAverage = (float) MoviesDbJsonUtils.getNoteAverage(jsonStringResult, index);
+            noteAverage = noteAverage/2; //we want only 5 stars max but by default the rate is /10
+            i.putExtra(MOVIE_ID, movieId);
+            i.putExtra(ORIGINAL_TITLE, originalTitle);
+            i.putExtra(POSTER_FULL_URL, posterFullUrl);
+            i.putExtra(RELEASE_DATE, releaseDate);
+            i.putExtra(OVERVIEW, overview);
+            i.putExtra(NOTE_AVERAGE, noteAverage);
+        }
+
+        catch (JSONException e) {
+            e.printStackTrace();}
+
         startActivity(i);
 
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -23,6 +23,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvOverview;
     private TextView tvRate;
     private RatingBar rtRate;
+    private int movieId;
     private String originalTitle;
     private String posterFullUrl;
     private String releaseDate;
@@ -63,22 +64,15 @@ protected void onResume()
     super.onResume();
 
     Intent i = getIntent();
-    jsonString = i.getStringExtra(MainActivity.JSON_STRING);
-    index = i.getIntExtra(MainActivity.INDEX, 0);
-
-    try {
-        originalTitle = MoviesDbJsonUtils.getOriginalTitleFromJson(jsonString, index);
-        posterFullUrl = MoviesDbJsonUtils.getBigPosterFullUrl(jsonString, index);
-        releaseDate = MoviesDbJsonUtils.getReleaseDate(jsonString, index);
-        overview = MoviesDbJsonUtils.getOverview(jsonString, index);
-        noteAverage = (float) MoviesDbJsonUtils.getNoteAverage(jsonString, index);
-        noteAverage = noteAverage/2; //we want only 5 stars max but by default the rate is /10
-
-    }
 
 
-    catch (JSONException e) {
-        e.printStackTrace();}
+        movieId=i.getIntExtra(MainActivity.MOVIE_ID, 0);
+        originalTitle = i.getStringExtra(MainActivity.ORIGINAL_TITLE);
+        posterFullUrl = i.getStringExtra(MainActivity.POSTER_FULL_URL);
+        releaseDate = i.getStringExtra(MainActivity.RELEASE_DATE);
+        overview = i.getStringExtra(MainActivity.OVERVIEW);
+        noteAverage = i.getFloatExtra(MainActivity.NOTE_AVERAGE, 0);
+
 
     Picasso.with(this).load(posterFullUrl).into(poster);
     tvTitle.setText(originalTitle);
