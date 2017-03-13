@@ -32,7 +32,7 @@ public class MoviesPostersAdapter extends RecyclerView.Adapter< MoviesPostersAda
     @Override
     public MoviesPostersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_poster, null, false);
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.posters, null, false);
         MoviesPostersViewHolder viewHolder = new MoviesPostersViewHolder(layoutView);
         return viewHolder;
 

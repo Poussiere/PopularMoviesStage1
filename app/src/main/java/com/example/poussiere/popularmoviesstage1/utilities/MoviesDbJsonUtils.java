@@ -4,12 +4,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+
 
 public class MoviesDbJsonUtils {
 
 
 
-   // Keys for the SonFile returned by TMDB
+   // Keys for the JSonFile returned by TMDB with populare and top rated request
 
     final static String TMDB_MOVIES_ARRAY="results";
     final static String TMDB_POSTER_PATH="poster_path";
@@ -19,8 +23,22 @@ public class MoviesDbJsonUtils {
     final static String TMDB_RELEASE_DATE="release_date";
     final static String TMDB_MOVIE_ID="id";
 
+    //Keys for the JSonfile returned for videos request
+    final static String TMDB_VIDEOS_ARRAY="results";
+    final static String TMDB_VIDEO_NAME="name";
+    final static String TMDB_VIDEO_SITE="site";
+    final static String TMDB_VIDEO_TYPE="type";
+    final static String TMDB_YOUTUBE_VIDEO_KEY="key";
+    final static String TMDB_DESIRED_SITE="YouTube";
+    final static String TMDB_DESIRED_TYPE="Trailer";
 
-    //number of results for each page of results
+    //Keys for the JSonFile returned for reviews request
+    final static String TMDB_REVIEWS_ARRAY="results";
+    final static String TMDB_REVIEW_AUTHOR = "author";
+    final static String TMDB_REVIEW_CONTENT = "content";
+
+
+    //number of results for each page of results for populare and top rated requests
     final static int RESULTS_NUMBER=20;
 
 
@@ -153,11 +171,91 @@ public class MoviesDbJsonUtils {
 
     }
 
+    public static ArrayList<TrailerObject> getTrailersFullUrl(String jsonString) throws JSONException
+
+    {
+        ArrayList<TrailerObject> trailersList=new ArrayList<TrailerObject>();
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return null;
 
 
+        JSONArray jsonMoviesArray = jsonObject.getJSONArray(TMDB_VIDEOS_ARRAY);
+
+        JSONObject trailerJsonObject;
+        TrailerObject trailerObject;
+        String name;
+        String youtubeMovieId;
+        String type;
+        String site;
+        URL trailerUrl;
+
+        int length = jsonMoviesArray.length();
+
+        //For each video, we check if it is a trailer and if it is on Youtube site
+
+        for (int i=0; i<length; i++)
+        {
+        trailerJsonObject=jsonMoviesArray.getJSONObject(i);
+            type=trailerJsonObject.getString(TMDB_VIDEO_TYPE);
+            site=trailerJsonObject.getString(TMDB_VIDEO_SITE);
+
+            if (type.equals(TMDB_DESIRED_TYPE) && site.equals(TMDB_DESIRED_SITE))
+            {
+                name=trailerJsonObject.getString(TMDB_VIDEO_NAME);
+                youtubeMovieId=trailerJsonObject.getString(TMDB_YOUTUBE_VIDEO_KEY);
+                trailerUrl=NetworkUtils.buildYoutubeRequestUrl(youtubeMovieId);
+                trailerObject=new TrailerObject(name, trailerUrl);
+                trailersList.add(trailerObject);
+                Collections.reverse(trailersList);
+            }
+
+        }
+
+    return trailersList;
+
+    }
+
+    public static ArrayList<ReviewObject> getReviewsFullUrl(String jsonString) throws JSONException
+
+    {
+        ArrayList<ReviewObject> reviewsList=new ArrayList<ReviewObject>();
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        //handle possible error messages
+        if (hasErrorMessage(jsonObject)) return null;
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+        JSONArray jsonReviewsArray = jsonObject.getJSONArray(TMDB_REVIEWS_ARRAY);
+
+        JSONObject reviewsJsonObject;
+        ReviewObject reviewObject;
+
+        String reviewAuthor;
+        String reviewContent;
+
+        int length = jsonReviewsArray.length();
+
+        //For each video, we check if it is a trailer and if it is on Youtube site
+
+        for (int i=0; i<length; i++)
+        {
+            reviewsJsonObject=jsonReviewsArray.getJSONObject(i);
+
+                reviewAuthor=reviewsJsonObject.getString(TMDB_REVIEW_AUTHOR);
+                reviewContent=reviewsJsonObject.getString(TMDB_REVIEW_CONTENT);
+                reviewObject=new ReviewObject(reviewAuthor,reviewContent);
+                reviewsList.add(reviewObject);
+                Collections.reverse(reviewsList);
+        }
+
+        return reviewsList;
+
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
     //Method that allows to handle possible error messages in the Json Files from the movie db
     public static boolean hasErrorMessage(JSONObject jsonObject) throws JSONException
     {
